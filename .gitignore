@@ -1,2 +1,5 @@
 .venv
 .env
+food_classifier_model.pth
+food_classifier_checkpoint.pth
+full_food_classifier_model.pt
