@@ -2,7 +2,7 @@ import torch
 import torchvision.models as models
 import torchvision.transforms as transforms
 from PIL import Image
-
+from ingredients_boxes import detect_ingredients_faster_rcnn as detect_ingredients
 class FoodClassifier(torch.nn.Module):
     def __init__(self, num_classes):
         super(FoodClassifier, self).__init__()
@@ -66,9 +66,14 @@ def main():
     model = load_model(model_path)
     
     # Predict on an image
-    image_path = './images/burger.jpg'
+    image_path = './images/bread-toast.jpg'
     prediction = predict_image(model, image_path)
     print(f"Predicted class: {prediction}")
+
+    #boundary boxes
+    bouding_boxes = detect_ingredients(image_path)
+    print(f"Bounding boxes: {bouding_boxes}")
+
 
 if __name__ == "__main__":
     main()
