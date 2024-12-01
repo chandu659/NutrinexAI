@@ -40,3 +40,19 @@ This project provides an intelligent system for calulating yout nutritional inta
 ## Contributing
 
 This project welcomes contributions! Please feel free to fork the repository and submit pull requests.
+
+ ## Project Setup
+ Utilize virtual environment for consisyent package version
+
+ 1. Activate the virtual environment 
+ 2. Install the required packages -> pip install -r requirements.txt
+ 3. Setup environment with GEMINI_API_KEY
+ 
+ This project consists of two models
+ - **food-model.py** : This code loads Faster R-CNN model to predict the dish name, and detect ingredients.
+ run python food-model.py
+
+ - **food_calorie_calculator.py** : This code use gemini-1.5-pro model to detect the dish name, counts calorie, and displays nutrient values of the dish. 
+  run py -m streamlit run gemini-1.5p
+
+

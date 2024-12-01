@@ -1,39 +1,79 @@
-# import pandas as pd
-# import os
-# from PIL import Image
+import torch
+import torchvision.models as models
+import torchvision.transforms as transforms
+from PIL import Image
+from ingredients_boxes import detect_ingredients_faster_rcnn as detect_ingredients
+class FoodClassifier(torch.nn.Module):
+    def __init__(self, num_classes):
+        super(FoodClassifier, self).__init__()
+        self.base_model = models.resnet50(pretrained=False)
+        self.base_model.fc = torch.nn.Linear(self.base_model.fc.in_features, num_classes)
 
-# # Set the path to your CSV file and image folder
-# csv_file = 'C:/Users/meena/dl_project/NutrinexAI/dataset/nutrient/data.csv'
-# image_folder = 'C:/Users/meena/dl_project/NutrinexAI/dataset/nutrient/images'
+    def forward(self, x):
+        return self.base_model(x)
 
-# # Load the CSV file into a DataFrame
-# data = pd.read_csv(csv_file)
+# Define your selected classes (must match training)
+selected_classes = [
+    "apple_pie", "baby_back_ribs", "baklava", "beef_carpaccio",
+    "beignets", "bibimbap", "caesar_salad", "caprese_salad",
+    "carrot_cake", "ceviche", "cheesecake", "chicken_curry",
+    "chicken_quesadilla", "churros", "clam_chowder", "club_sandwich",
+    "crab_cakes", "donuts", "eggs_benedict", "falafel"
+]
 
-# # Assuming the image filenames are in a column called 'index'
-# dish_names = {
-#     "1.jpg": "blue cheese and walnut scones",
-#     "2.jpg": "mini focaccia bread",
-#     "3.jpg": "stuffed bread rolls",
-# }
-
-# # Loop through each row in the DataFrame
-# for index, row in data.iterrows():
-#     # Convert 'index' column to a string to create the filename
-#     image_filename = str(row['index']) + '.jpg'  # Assuming the 'index' column matches your image filenames
-#     image_path = os.path.join(image_folder, image_filename)
+# Load the model
+def load_model(model_path):
+    # Determine device
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
-#     # Retrieve the dish name from the dictionary or use a default value if not found
-#     dish_name = dish_names.get(image_filename, "Unknown Dish")
+    # Create model instance
+    model = FoodClassifier(num_classes=len(selected_classes))
     
-#     # Display the nutritional information
-#     print(f"Image: {image_filename} - Dish: {dish_name}")
-#     print("Carbs: 30g, Fat: 11g, Fibre: 2g, Kcal: 275, Protein: 17g")
-#     print("Salt: 1.99g, Saturates: 6g, Sugars: 4g")
-#     print("------------------------------")
+    # Load state dict
+    model.load_state_dict(torch.load(model_path, map_location=device))
+    model.eval()
+    return model.to(device)
+
+# Prediction function
+def predict_image(model, image_path):
+    # Define transforms (must match training transforms)
+    transform = transforms.Compose([
+        transforms.Resize((224, 224)),
+        transforms.ToTensor(),
+        transforms.Normalize(
+            mean=[0.485, 0.456, 0.406], 
+            std=[0.229, 0.224, 0.225]
+        )
+    ])
     
-#     # Optional: Display the image if it exists
-#     if os.path.exists(image_path):
-#         image = Image.open(image_path)
-#         image.show()  
-#     else:
-#         print("Image not found:", image_path)
+    # Prepare image
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    image = Image.open(image_path).convert("RGB")
+    image_tensor = transform(image).unsqueeze(0).to(device)
+    
+    # Predict
+    with torch.no_grad():
+        outputs = model(image_tensor)
+        _, predicted = torch.max(outputs, 1)
+        return selected_classes[predicted.item()]
+
+# Example usage
+def main():
+    # Path to your downloaded model
+    model_path = './food_classifier_model.pth'
+    
+    # Load model
+    model = load_model(model_path)
+    
+    # Predict on an image
+    image_path = './images/bread-toast.jpg'
+    prediction = predict_image(model, image_path)
+    print(f"Predicted class: {prediction}")
+
+    #boundary boxes
+    bouding_boxes = detect_ingredients(image_path)
+    print(f"Bounding boxes: {bouding_boxes}")
+
+
+if __name__ == "__main__":
+    main()
