@@ -66,7 +66,7 @@ def main():
     model = load_model(model_path)
     
     # Predict on an image
-    image_path = './images/bread-toast.jpg'
+    image_path = './images/chicken.jpg'
     prediction = predict_image(model, image_path)
     print(f"Predicted class: {prediction}")
 

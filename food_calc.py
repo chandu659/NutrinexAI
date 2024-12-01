@@ -1,7 +1,7 @@
-### Food Calories calculator APP
+## Food calorie calculator
 from dotenv import load_dotenv
 
-load_dotenv() ## load all the environment variables
+load_dotenv() 
 
 import streamlit as st
 import os
@@ -19,14 +19,14 @@ def get_gemini_repsonse(input,image,prompt):
 
 
 def input_image_setup(uploaded_file):
-    # Check if a file has been uploaded
+    
     if uploaded_file is not None:
-        # Read the file into bytes
+        
         bytes_data = uploaded_file.getvalue()
 
         image_parts = [
             {
-                "mime_type": uploaded_file.type,  # Get the mime type of the uploaded file
+                "mime_type": uploaded_file.type, 
                 "data": bytes_data
             }
         ]
