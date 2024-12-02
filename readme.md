@@ -45,11 +45,14 @@ This project welcomes contributions! Please feel free to fork the repository and
  Utilize virtual environment for the consistent package version
 
  1. Activate the virtual environment 
- 2. Install the required packages -> pip install -r requirements.txt
- 3. Setup environment with GEMINI_API_KEY
+ 2. Install the required packages
+    ```bash
+    pip install -r requirements.txt
+    ```
+ 4. Setup environment with GEMINI_API_KEY
  
- This project consists of two models
- 1. **food-model.py** : This code loads Faster R-CNN model to predict the dish name and draw bounding boxes for each ingredient of the image.
+ This project consists of two model
+ ## 1. Food Model (`food-model.py`): This code loads Faster R-CNN model to predict the dish name and draw bounding boxes for each ingredient of the image.
 ```bash
 python food-model.py
 ```
