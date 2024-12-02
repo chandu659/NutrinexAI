@@ -52,12 +52,12 @@ This project welcomes contributions! Please feel free to fork the repository and
  4. Setup environment with GEMINI_API_KEY
  
  This project consists of two model
- ## 1. Food Model (`food-model.py`): This code loads Faster R-CNN model to predict the dish name and draw bounding boxes for each ingredient of the image.
+ 1. **Food Model (`food-model.py`)**: This code loads Faster R-CNN model to predict the dish name and draw bounding boxes for each ingredient of the image.
 ```bash
 python food-model.py
 ```
 
- 2. **food_calorie_calculator.py** : This code uses gemini-1.5-pro model to detect the dish name, count calories, display nutrient values of the dish
+ 2. **Food_calorie_calculator.py** : This code uses gemini-1.5-pro model to detect the dish name, count calories, display nutrient values of the dish
    and which also detects ingredients and draws bounding boxes on the image.
 ```bash
   py -m streamlit run gemini-1.5pro.py
