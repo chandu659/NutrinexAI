@@ -4,3 +4,4 @@ food_classifier_checkpoint.pth
 full_food_classifier_model.pt
 images
 checkpoints
+depth_anything_v2
